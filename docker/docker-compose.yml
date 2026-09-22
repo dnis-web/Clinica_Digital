@@ -1,13 +1,10 @@
 # ============================================================
 # docker-compose.yml - Clínica Digital
 #
-# Nota importante: el proyecto NO usa arquitectura de
-# microservicios. El servicio "app" contiene el monolito
-# Laravel completo (autenticación, citas, expediente clínico,
-# notificaciones y pagos como módulos internos, no como
-# servicios independientes). El motor de base de datos es
-# MySQL (no PostgreSQL), para ser coherente con el modelo
-# relacional y los scripts SQL ya definidos en el proyecto.
+# Aplicación monolítica: el servicio "app" contiene el
+# sistema completo (autenticación, citas, expediente clínico,
+# notificaciones y pagos como módulos internos). Base de
+# datos: MySQL, acorde al modelo relacional del proyecto.
 # ============================================================
 
 services:

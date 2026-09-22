@@ -2,10 +2,9 @@
 # Dockerfile - Servicio de aplicación (PHP 8.2 + Laravel)
 # Proyecto Clínica Digital
 #
-# Nota: este proyecto NO usa arquitectura de microservicios,
-# por lo que se define un único servicio de aplicación en vez
-# de un Dockerfile por "auth", "catálogo", "pedidos", "pagos"
-# como sugiere el ejemplo genérico de la guía.
+# Aplicación monolítica: un único servicio de aplicación que
+# contiene todos los módulos (usuarios, citas, expediente
+# clínico, notificaciones, pagos).
 # ============================================================
 
 FROM php:8.2-fpm
