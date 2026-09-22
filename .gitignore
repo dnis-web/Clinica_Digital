@@ -1,0 +1,36 @@
+# ==== Variables de entorno y secretos ====
+.env
+.env.backup
+.env.*.local
+docker/.env
+
+# ==== Dependencias ====
+src/vendor/
+src/node_modules/
+
+# ==== Laravel ====
+src/storage/*.key
+src/storage/logs/*
+src/storage/framework/cache/*
+src/storage/framework/sessions/*
+src/storage/framework/views/*
+src/storage/framework/testing/*
+src/bootstrap/cache/*
+src/public/storage
+src/.phpunit.result.cache
+
+# ==== Docker ====
+docker/mysql-data/
+docker/redis-data/
+
+# ==== Sistema operativo / editores ====
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# ==== Archivos de respaldo de base de datos (sensibles) ====
+*.sql.bak
+/backups/
+*:Zone.Identifier
