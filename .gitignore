@@ -34,3 +34,4 @@ Thumbs.db
 *.sql.bak
 /backups/
 *:Zone.Identifier
+src/database/database.sqlite
