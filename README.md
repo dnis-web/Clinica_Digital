@@ -7,39 +7,32 @@ con procesos manuales.
 Proyecto desarrollado para el curso de **Seminario de Tecnología de Información**, Universidad
 Mariano Gálvez, Sección A, Plan Fin de Semana.
 
-## Nota sobre la arquitectura (adaptación de la guía DevOps)
+## Arquitectura
 
-La guía de este entregable usa como ejemplo genérico una arquitectura de **microservicios**
-(auth, catálogo, pedidos, pagos) con PostgreSQL. **Este proyecto no está diseñado como
-microservicios**: es una aplicación **monolítica** construida en **PHP con el framework Laravel**,
-organizada internamente por módulos (Autenticación/Usuarios, Citas, Expediente Clínico,
-Notificaciones, Pagos), consistente con la Arquitectura del Sistema ya definida y corregida en
-entregas anteriores del proyecto (servidor de aplicación PHP/Laravel detrás de Nginx, base de
-datos **MySQL**, no PostgreSQL).
+El sistema es una aplicación **monolítica**, organizada internamente en capas (presentación,
+lógica de negocio y acceso a datos) y por módulos funcionales: Autenticación/Usuarios, Citas,
+Expediente Clínico, Notificaciones y Pagos. Se construye en **PHP con el framework Laravel**,
+detrás de un servidor **Nginx**, con **MySQL** como motor de base de datos — la misma decisión
+técnica ya documentada y corregida en la Arquitectura del Sistema del proyecto.
 
-Por eso, en este repositorio:
-- Se usa **un solo Dockerfile** para el servicio de aplicación (el monolito Laravel), en vez de
-  un Dockerfile por cada "microservicio" ficticio.
-- El motor de base de datos en `docker-compose.yml` es **MySQL 8**, no PostgreSQL, para ser
-  coherente con el modelo relacional, el diccionario de datos y los scripts SQL ya construidos
-  y probados por el equipo.
-- Se mantiene **Redis** tal como pide la guía, utilizado aquí como caché de sesiones/consultas y
-  como backend de colas (por ejemplo, para el envío asíncrono de notificaciones por correo o
-  WhatsApp), que es un uso perfectamente válido dentro de una arquitectura monolítica.
+Componentes contenerizados en este repositorio:
+
+| Servicio | Tecnología | Rol |
+|---|---|---|
+| `app` | PHP 8.2 + Laravel | Lógica de la aplicación: usuarios, citas, expediente clínico, notificaciones y pagos |
+| `webserver` | Nginx | Servidor web, enruta las peticiones hacia `app` |
+| `db` | MySQL 8 | Base de datos relacional del sistema |
+| `phpmyadmin` | phpMyAdmin | Administración visual de la base de datos |
+| `redis` | Redis 7 | Caché de sesiones/consultas y cola para el envío asíncrono de notificaciones (correo, WhatsApp) |
 
 ## Estructura del repositorio
 
-```
-.
-├── README.md
-├── .gitignore
-├── .env.example
-├── src/              # Código fuente de la aplicación Laravel (monolito)
-├── docs/             # Documentación del proyecto (modelo relacional, diccionario de datos,
-│                      # arquitectura, requerimientos, etc.)
-├── docker/           # Dockerfile, configuración de Nginx y docker-compose.yml
-└── tests/            # Pruebas automatizadas (PHPUnit)
-```
+- `README.md`, `.gitignore`, `.env.example` — en la raíz del proyecto.
+- `src/` — código fuente de la aplicación Laravel (monolito).
+- `docs/` — documentación del proyecto (modelo relacional, diccionario de datos, arquitectura,
+  requerimientos, scripts SQL en `docs/sql/`, etc.).
+- `docker/` — Dockerfile, configuración de Nginx y `docker-compose.yml`.
+- `tests/` — pruebas automatizadas (PHPUnit).
 
 ## Requisitos previos
 
@@ -51,8 +44,8 @@ Por eso, en este repositorio:
 
 1. Clonar el repositorio y entrar a la carpeta:
    ```bash
-   git clone https://github.com/<usuario-o-equipo>/clinica-digital.git
-   cd clinica-digital
+   git clone https://github.com/dnis-web/Clinica_Digital.git
+   cd Clinica_Digital
    ```
 
 2. Copiar el archivo de variables de entorno de ejemplo:
