@@ -20,6 +20,52 @@ use Tests\TestCase;
 class AgendarCitaTest extends TestCase
 {
     /**
+     * Antes de cada prueba, se eliminan citas previas del médico de prueba
+     * (y todo lo que dependa de ellas) en las fechas que estas pruebas
+     * usan. Esto hace que el test sea repetible: sin esta limpieza, la
+     * segunda vez que se ejecuta chocaría con los datos que dejó la
+     * corrida anterior. El orden de borrado respeta las llaves foráneas
+     * reales del esquema: receta -> consulta_medica -> notificacion/pago
+     * -> cita.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $medico = Medico::first();
+        if (! $medico) {
+            return;
+        }
+
+        $fechas = [
+            now()->addDay()->toDateString(),
+            now()->addDays(2)->toDateString(),
+        ];
+
+        $idsCita = DB::table('cita')
+            ->where('id_medico', $medico->id_medico)
+            ->whereIn('fecha_cita', $fechas)
+            ->pluck('id_cita');
+
+        if ($idsCita->isEmpty()) {
+            return;
+        }
+
+        $idsConsulta = DB::table('consulta_medica')
+            ->whereIn('id_cita', $idsCita)
+            ->pluck('id_consulta');
+
+        if ($idsConsulta->isNotEmpty()) {
+            DB::table('receta')->whereIn('id_consulta', $idsConsulta)->delete();
+        }
+
+        DB::table('consulta_medica')->whereIn('id_cita', $idsCita)->delete();
+        DB::table('notificacion')->whereIn('id_cita', $idsCita)->delete();
+        DB::table('pago')->whereIn('id_cita', $idsCita)->delete();
+        DB::table('cita')->whereIn('id_cita', $idsCita)->delete();
+    }
+
+    /**
      * CP-01: el sistema debe rechazar una cita cuyo horario se traslapa
      * con una cita ya existente del mismo médico (regla de negocio RN01,
      * aplicada mediante trigger en la base de datos).
