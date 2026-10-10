@@ -1,53 +1,52 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Registrar paciente - Clínica Digital</title>
-</head>
-<body>
-    <p><a href="/citas">← Ver agenda</a> | <a href="/logout">Cerrar sesión</a></p>
+@extends('layouts.app')
+@section('titulo', 'Registrar paciente - Clínica Digital')
+@section('encabezado', 'Registrar paciente')
+@section('subtitulo', 'Al registrar, el sistema crea automáticamente su expediente clínico')
 
-    <h1>Registrar paciente</h1>
-
-    @if ($errors->any())
-        <div style="color:red">
-            @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
-            @endforeach
-        </div>
-    @endif
-
+@section('contenido')
+<div class="panel">
     <form method="POST" action="/pacientes">
         @csrf
-        <label>DPI:</label><br>
-        <input type="text" name="dpi" value="{{ old('dpi') }}" required><br><br>
-
-        <label>Nombres:</label><br>
-        <input type="text" name="nombres" value="{{ old('nombres') }}" required><br><br>
-
-        <label>Apellidos:</label><br>
-        <input type="text" name="apellidos" value="{{ old('apellidos') }}" required><br><br>
-
-        <label>Fecha de nacimiento:</label><br>
-        <input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" required><br><br>
-
-        <label>Sexo:</label><br>
-        <select name="sexo" required>
-            <option value="">-- Selecciona --</option>
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-        </select><br><br>
-
-        <label>Teléfono:</label><br>
-        <input type="text" name="telefono" value="{{ old('telefono') }}"><br><br>
-
-        <label>Correo:</label><br>
-        <input type="email" name="correo" value="{{ old('correo') }}"><br><br>
-
-        <label>Dirección:</label><br>
-        <input type="text" name="direccion" value="{{ old('direccion') }}"><br><br>
-
-        <button type="submit">Registrar paciente</button>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="dpi">DPI</label>
+                <input id="dpi" type="text" name="dpi" value="{{ old('dpi') }}" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_nacimiento">Fecha de nacimiento</label>
+                <input id="fecha_nacimiento" type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="nombres">Nombres</label>
+                <input id="nombres" type="text" name="nombres" value="{{ old('nombres') }}" maxlength="100" required>
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input id="apellidos" type="text" name="apellidos" value="{{ old('apellidos') }}" maxlength="100" required>
+            </div>
+            <div class="form-group">
+                <label for="sexo">Sexo</label>
+                <select id="sexo" name="sexo" required>
+                    <option value="">-- Selecciona --</option>
+                    <option value="M" @selected(old('sexo') == 'M')>Masculino</option>
+                    <option value="F" @selected(old('sexo') == 'F')>Femenino</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input id="telefono" type="text" name="telefono" value="{{ old('telefono') }}" maxlength="15">
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo electrónico</label>
+                <input id="correo" type="email" name="correo" value="{{ old('correo') }}" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input id="direccion" type="text" name="direccion" value="{{ old('direccion') }}" maxlength="150">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar paciente</button>
+        <a href="/citas" class="btn btn-secondary">Cancelar</a>
     </form>
-</body>
-</html>
+</div>
+@endsection

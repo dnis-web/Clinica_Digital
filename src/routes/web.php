@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => redirect('/login'));
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CitaController;
@@ -21,7 +19,6 @@ use App\Http\Controllers\PacienteController;
 Route::get('/login', [AuthController::class, 'showLogin']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/logout', [AuthController::class, 'logout']); // enlace simple <a href="/logout">
 
 Route::middleware('checkauth')->group(function () {
     Route::get('/pacientes/crear', [PacienteController::class, 'create']);

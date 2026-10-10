@@ -1,46 +1,31 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Agenda de citas - Clínica Digital</title>
-</head>
-<body>
-    <p>
-        Hola, {{ session('usuario_nombre') }} ({{ session('usuario_rol') }}) |
-        <a href="/pacientes/crear">Registrar paciente</a> |
-        <a href="/citas/crear">Agendar cita</a> |
-        <a href="/logout">Cerrar sesión</a>
-    </p>
+@extends('layouts.app')
+@section('titulo', 'Agenda de citas - Clínica Digital')
+@section('encabezado', 'Agenda de citas')
+@section('subtitulo', 'Citas programadas por fecha y hora')
 
-    <h1>Agenda de citas</h1>
-
-    @if (session('status'))
-        <p style="color:green">{{ session('status') }}</p>
-    @endif
-
-    <table border="1" cellpadding="6">
+@section('contenido')
+<div class="panel">
+    <div class="panel-header">
+        <h2>Citas</h2>
+        <a href="/citas/crear" class="btn btn-primary">+ Agendar cita</a>
+    </div>
+    <table>
         <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Paciente</th>
-                <th>Médico</th>
-                <th>Estado</th>
-            </tr>
+            <tr><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Médico</th><th>Estado</th></tr>
         </thead>
         <tbody>
             @forelse ($citas as $cita)
                 <tr>
                     <td>{{ $cita->fecha_cita }}</td>
-                    <td>{{ $cita->hora_inicio }} - {{ $cita->hora_fin }}</td>
+                    <td>{{ substr($cita->hora_inicio, 0, 5) }} - {{ substr($cita->hora_fin, 0, 5) }}</td>
                     <td>{{ $cita->paciente }}</td>
                     <td>{{ $cita->medico }}</td>
-                    <td>{{ $cita->estado_cita }}</td>
+                    <td><span class="estado {{ strtolower($cita->estado_cita) }}">{{ $cita->estado_cita }}</span></td>
                 </tr>
             @empty
                 <tr><td colspan="5">Aún no hay citas agendadas.</td></tr>
             @endforelse
         </tbody>
     </table>
-</body>
-</html>
+</div>
+@endsection

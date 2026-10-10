@@ -46,6 +46,9 @@ class AuthController extends Controller
             return back()->withErrors(['correo' => 'Correo o contraseña incorrectos.']);
         }
 
+        // Seguridad: nuevo ID de sesión al autenticarse (evita fijación de sesión)
+        $request->session()->regenerate();
+
         session([
             'usuario_id' => $usuario->id_usuario,
             'usuario_nombre' => $usuario->nombre.' '.$usuario->apellido,
@@ -57,7 +60,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->session()->flush();
+        // Seguridad: se destruye la sesión y se renueva el token CSRF
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/login')->with('status', 'Sesión cerrada.');
     }
