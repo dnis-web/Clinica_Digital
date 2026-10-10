@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('titulo', 'Agendar cita - Clínica Digital')
 @section('encabezado', 'Agendar cita')
-@section('subtitulo', 'El sistema rechaza horarios que se traslapan con otra cita del mismo médico')
+@section('subtitulo', 'Citas de 30 minutos, de 8:00 AM a 4:00 PM. El sistema rechaza horarios ya ocupados por el médico')
 
 @section('contenido')
 <div class="panel">
@@ -30,14 +30,14 @@
                 <label for="fecha">Fecha</label>
                 <input id="fecha" type="date" name="fecha" value="{{ old('fecha') }}" required>
             </div>
-            <div class="form-group"></div>
             <div class="form-group">
-                <label for="hora_inicio">Hora de inicio</label>
-                <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio') }}" required>
-            </div>
-            <div class="form-group">
-                <label for="hora_fin">Hora de fin</label>
-                <input id="hora_fin" type="time" name="hora_fin" value="{{ old('hora_fin') }}" required>
+                <label for="hora_inicio">Hora de la cita (30 min)</label>
+                <select id="hora_inicio" name="hora_inicio" required>
+                    <option value="">-- Selecciona --</option>
+                    @foreach ($horarios as $h)
+                        <option value="{{ $h }}" @selected(old('hora_inicio') == $h)>{{ \Carbon\Carbon::createFromFormat('H:i', $h)->format('g:i A') }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group full">
                 <label for="motivo">Motivo de la consulta</label>

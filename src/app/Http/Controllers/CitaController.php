@@ -6,15 +6,32 @@ use App\Models\Medico;
 use App\Models\Paciente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class CitaController extends Controller
 {
+    // Citas de duración fija: horario de atención de 08:00 a 16:00,
+    // en bloques de 30 minutos (la última cita inicia a las 15:30).
+    private const DURACION_MIN = 30;
+
+    private function horarios(): array
+    {
+        $bloques = [];
+        for ($t = 8 * 60; $t < 16 * 60; $t += self::DURACION_MIN) {
+            $bloques[] = sprintf('%02d:%02d', intdiv($t, 60), $t % 60);
+        }
+
+        return $bloques;
+    }
+
     public function create()
     {
         $pacientes = Paciente::where('estado', true)->orderBy('nombres')->get();
         $medicos = Medico::where('estado', true)->orderBy('nombres')->get();
 
-        return view('citas.create', compact('pacientes', 'medicos'));
+        $horarios = $this->horarios();
+
+        return view('citas.create', compact('pacientes', 'medicos', 'horarios'));
     }
 
     public function store(Request $request)
@@ -23,10 +40,13 @@ class CitaController extends Controller
             'id_paciente' => 'required|integer|exists:paciente,id_paciente',
             'id_medico' => 'required|integer|exists:medico,id_medico',
             'fecha' => 'required|date|after_or_equal:today',
-            'hora_inicio' => 'required|date_format:H:i',
-            'hora_fin' => 'required|date_format:H:i|after:hora_inicio',
+            'hora_inicio' => ['required', Rule::in($this->horarios())],
             'motivo' => 'nullable|string|max:200',
         ]);
+
+        // La hora de fin se calcula: toda cita dura 30 minutos.
+        $inicio = \Carbon\Carbon::createFromFormat('H:i', $data['hora_inicio']);
+        $horaFin = $inicio->copy()->addMinutes(self::DURACION_MIN)->format('H:i:s');
 
         try {
             // Se delega la validación de solapamiento al procedimiento
@@ -39,7 +59,7 @@ class CitaController extends Controller
                 $data['id_medico'],
                 $data['fecha'],
                 $data['hora_inicio'].':00',
-                $data['hora_fin'].':00',
+                $horaFin,
                 $data['motivo'] ?? null,
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
