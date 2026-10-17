@@ -17,7 +17,10 @@
     <a href="/citas/crear" class="{{ request()->is('citas/crear') ? 'active' : '' }}">➕ Agendar cita</a>
     <a href="/pacientes/crear" class="{{ request()->is('pacientes/crear') ? 'active' : '' }}">👤 Registrar paciente</a>
 
-    <span class="menu-off">🩺 Médicos <small>Próximamente</small></span>
+    @if (session('usuario_rol') === 'Administrador')
+        <a href="/medicos" class="{{ request()->is('medicos*') ? 'active' : '' }}">🩺 Médicos</a>
+    @endif
+
     <span class="menu-off">📁 Expedientes <small>Próximamente</small></span>
     <span class="menu-off">💳 Pagos <small>Próximamente</small></span>
     <span class="menu-off">🔔 Notificaciones <small>Próximamente</small></span>

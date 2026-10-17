@@ -26,6 +26,8 @@ a{color:#009688}
 .btn-primary{background:#009688;color:#fff}
 .btn-primary:hover{background:#00796b}
 .btn-secondary{background:#17324d;color:#fff}
+.btn-danger{background:#d9534f;color:#fff}
+.btn-sm{padding:6px 12px;font-size:13px}
 
 /* Layout con sidebar */
 .sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:#17324d;color:#fff;padding:25px 15px;display:flex;flex-direction:column;overflow-y:auto}
@@ -55,6 +57,8 @@ td{padding:13px 12px;border-bottom:1px solid #eee}
 .estado.programada{background:#e0f2f1;color:#00796b}
 .estado.atendida{background:#e3f2fd;color:#1565c0}
 .estado.cancelada{background:#fdecea;color:#c62828}
+.estado.activo{background:#e0f2f1;color:#00796b}
+.estado.inactivo{background:#eceff1;color:#607d8b}
 
 /* Mensajes */
 .alert{padding:14px 18px;border-radius:8px;margin-bottom:20px}
