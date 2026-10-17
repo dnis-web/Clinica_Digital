@@ -21,7 +21,7 @@
         <a href="/medicos" class="{{ request()->is('medicos*') ? 'active' : '' }}">🩺 Médicos</a>
     @endif
 
-    <span class="menu-off">📁 Expedientes <small>Próximamente</small></span>
+    <a href="/pacientes" class="{{ request()->is('pacientes') || request()->is('pacientes/[0-9]*') ? 'active' : '' }}">📁 Expedientes</a>
     <span class="menu-off">💳 Pagos <small>Próximamente</small></span>
     <span class="menu-off">🔔 Notificaciones <small>Próximamente</small></span>
 

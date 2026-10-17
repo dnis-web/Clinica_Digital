@@ -35,3 +35,14 @@ Route::middleware(['checkauth', 'checkrol:Administrador'])->group(function () {
     Route::post('/medicos', [\App\Http\Controllers\MedicoController::class, 'store']);
     Route::post('/medicos/{id}/estado', [\App\Http\Controllers\MedicoController::class, 'cambiarEstado']);
 });
+
+Route::middleware('checkauth')->group(function () {
+    Route::get('/pacientes', [\App\Http\Controllers\ExpedienteController::class, 'index']);
+    Route::get('/pacientes/{id}', [\App\Http\Controllers\ExpedienteController::class, 'show'])->whereNumber('id');
+    Route::post('/citas/{id}/cancelar', [\App\Http\Controllers\ExpedienteController::class, 'cancelarCita'])->whereNumber('id');
+});
+
+Route::middleware(['checkauth', 'checkrol:Administrador,Médico'])->group(function () {
+    Route::get('/citas/{id}/consulta', [\App\Http\Controllers\ExpedienteController::class, 'consultaCreate'])->whereNumber('id');
+    Route::post('/citas/{id}/consulta', [\App\Http\Controllers\ExpedienteController::class, 'consultaStore'])->whereNumber('id');
+});
